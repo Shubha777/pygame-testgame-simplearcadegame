@@ -1,0 +1,136 @@
+# importing modules
+import pygame
+import random
+import sys
+import time
+
+# prepping
+start = time.time()
+pygame.init()
+white, black, red, brown = (255, 255, 255), (0, 0, 0), (255, 0, 0), (230, 105, 30)
+windem = 1500, 700
+speed = [2, 2]
+toiletspped = [1, 1]
+cometspeed = [1, 1]
+
+gamewindow = pygame.display.set_mode((windem))
+pygame.display.set_caption('Serial Experiments Toilet')
+
+cut = 50
+walllen = 100
+wallthick = 10
+width, height = windem
+difficulty = 40
+wallX = []
+wallY = []
+for j in range(difficulty):
+    wallX.append(round(random.randrange(50, width - cut) / 10.0) * 10.0)
+    wallY.append(round(random.randrange(50, height - cut) / 10.0) * 10.0)
+newrect = pygame.Rect(wallX[0], wallY[0], walllen, wallthick)
+rectlist = [newrect]
+
+for jojo in range(difficulty):
+    temp = rectlist.copy()
+    newrect = pygame.Rect(wallX[jojo], wallY[jojo], walllen, wallthick).copy()
+    rectlist.append(newrect)
+
+count = 0
+
+girl = pygame.image.load("walkinggirl2.gif")
+girl = pygame.transform.flip(girl, 1, 0)
+girlrect = girl.get_rect()
+
+toilet = pygame.image.load("toilet.jpg")
+toiletreact = toilet.get_rect(center=(600, 300))
+
+comet = pygame.image.load("comet.png")
+cometrect = comet.get_rect()
+
+# lis = [[-10, -10], [-10, -9], [-10, -8], [-10, -7], [-10, -6], [-10, -5], [-10, -4], [-10, -3], [-10, -2], [-10, -1], [-10, 0], [-10, 1], [-10, 2], [-10, 3], [-10, 4], [-10, 5], [-10, 6], [-10, 7], [-10, 8], [-10, 9], [-9, -10], [-9, -9], [-9, -8], [-9, -7], [-9, -6], [-9, -5], [-9, -4], [-9, -3], [-9, -2], [-9, -1], [-9, 0], [-9, 1], [-9, 2], [-9, 3], [-9, 4], [-9, 5], [-9, 6], [-9, 7], [-9, 8], [-9, 9], [-8, -10], [-8, -9], [-8, -8], [-8, -7], [-8, -6], [-8, -5], [-8, -4], [-8, -3], [-8, -2], [-8, -1], [-8, 0], [-8, 1], [-8, 2], [-8, 3], [-8, 4], [-8, 5], [-8, 6], [-8, 7], [-8, 8], [-8, 9], [-7, -10], [-7, -9], [-7, -8], [-7, -7], [-7, -6], [-7, -5], [-7, -4], [-7, -3], [-7, -2], [-7, -1], [-7, 0], [-7, 1], [-7, 2], [-7, 3], [-7, 4], [-7, 5], [-7, 6], [-7, 7], [-7, 8], [-7, 9], [-6, -10], [-6, -9], [-6, -8], [-6, -7], [-6, -6], [-6, -5], [-6, -4], [-6, -3], [-6, -2], [-6, -1], [-6, 0], [-6, 1], [-6, 2], [-6, 3], [-6, 4], [-6, 5], [-6, 6], [-6, 7], [-6, 8], [-6, 9], [-5, -10], [-5, -9], [-5, -8], [-5, -7], [-5, -6], [-5, -5], [-5, -4], [-5, -3], [-5, -2], [-5, -1], [-5, 0], [-5, 1], [-5, 2], [-5, 3], [-5, 4], [-5, 5], [-5, 6], [-5, 7], [-5, 8], [-5, 9], [-4, -10], [-4, -9], [-4, -8], [-4, -7], [-4, -6], [-4, -5], [-4, -4], [-4, -3], [-4, -2], [-4, -1], [-4, 0], [-4, 1], [-4, 2], [-4, 3], [-4, 4], [-4, 5], [-4, 6], [-4, 7], [-4, 8], [-4, 9], [-3, -10], [-3, -9], [-3, -8], [-3, -7], [-3, -6], [-3, -5], [-3, -4], [-3, -3], [-3, -2], [-3, -1], [-3, 0], [-3, 1], [-3, 2], [-3, 3], [-3, 4], [-3, 5], [-3, 6], [-3, 7], [-3, 8], [-3, 9], [-2, -10], [-2, -9], [-2, -8], [-2, -7], [-2, -6], [-2, -5], [-2, -4], [-2, -3], [-2, -2], [-2, -1], [-2, 0], [-2, 1], [-2, 2], [-2, 3], [-2, 4], [-2, 5], [-2, 6], [-2, 7], [-2, 8], [-2, 9], [-1, -10], [-1, -9], [-1, -8], [-1, -7], [-1, -6], [-1, -5], [-1, -4], [-1, -3], [-1, -2], [-1, -1], [-1, 0], [-1, 1], [-1, 2], [-1, 3], [-1, 4], [-1, 5], [-1, 6], [-1, 7], [-1, 8], [-1, 9], [0, -10], [0, -9], [0, -8], [0, -7], [0, -6], [0, -5], [0, -4], [0, -3], [0, -2], [0, -1], [0, 0], [0, 1], [0, 2], [0, 3], [0, 4], [0, 5], [0, 6], [0, 7], [0, 8], [0, 9], [1, -10], [1, -9], [1, -8], [1, -7], [1, -6], [1, -5], [1, -4], [1, -3], [1, -2], [1, -1], [1, 0], [1, 1], [1, 2], [1, 3], [1, 4], [1, 5], [1, 6], [1, 7], [1, 8], [1, 9], [2, -10], [2, -9], [2, -8], [2, -7], [2, -6], [2, -5], [2, -4], [2, -3], [2, -2], [2, -1], [2, 0], [2, 1], [2, 2], [2, 3], [2, 4], [2, 5], [2, 6], [2, 7], [2, 8], [2, 9], [3, -10], [3, -9], [3, -8], [3, -7], [3, -6], [3, -5], [3, -4], [3, -3], [3, -2], [3, -1], [3, 0], [3, 1], [3, 2], [3, 3], [3, 4], [3, 5], [3, 6], [3, 7], [3, 8], [3, 9], [4, -10], [4, -9], [4, -8], [4, -7], [4, -6], [4, -5], [4, -4], [4, -3], [4, -2], [4, -1], [4, 0], [4, 1], [4, 2], [4, 3], [4, 4], [4, 5], [4, 6], [4, 7], [4, 8], [4, 9], [5, -10], [5, -9], [5, -8], [5, -7], [5, -6], [5, -5], [5, -4], [5, -3], [5, -2], [5, -1], [5, 0], [5, 1], [5, 2], [5, 3], [5, 4], [5, 5], [5, 6], [5, 7], [5, 8], [5, 9], [6, -10], [6, -9], [6, -8], [6, -7], [6, -6], [6, -5], [6, -4], [6, -3], [6, -2], [6, -1], [6, 0], [6, 1], [6, 2], [6, 3], [6, 4], [6, 5], [6, 6], [6, 7], [6, 8], [6, 9], [7, -10], [7, -9], [7, -8], [7, -7], [7, -6], [7, -5], [7, -4], [7, -3], [7, -2], [7, -1], [7, 0], [7, 1], [7, 2], [7, 3], [7, 4], [7, 5], [7, 6], [7, 7], [7, 8], [7, 9], [8, -10], [8, -9], [8, -8], [8, -7], [8, -6], [8, -5], [8, -4], [8, -3], [8, -2], [8, -1], [8, 0], [8, 1], [8, 2], [8, 3], [8, 4], [8, 5], [8, 6], [8, 7], [8, 8], [8, 9], [9, -10], [9, -9], [9, -8], [9, -7], [9, -6], [9, -5], [9, -4], [9, -3], [9, -2], [9, -1], [9, 0], [9, 1], [9, 2], [9, 3], [9, 4], [9, 5], [9, 6], [9, 7], [9, 8], [9, 9]]
+lis = [[-5, -5], [-5, -4], [-5, -3], [-5, 3], [-5, 4], [-5, 5], [-4, -5], [-4, -4], [-4, -3], [-4, 3], [-4, 4], [-4, 5],
+       [-3, -5], [-3, -4], [-3, -3], [-3, 3], [-3, 4], [-3, 5], [3, -5], [3, -4], [3, -3], [3, 3], [3, 4], [3, 5],
+       [4, -5], [4, -4], [4, -3], [4, 3], [4, 4], [4, 5], [5, -5], [5, -4], [5, -3], [5, 3], [5, 4], [5, 5]]
+
+SCORE = 0
+font = pygame.font.Font('freesansbold.ttf', 32)
+
+SCORE_FONT = pygame.font.Font(pygame.font.get_default_font(), 20)
+BANF_FONT = pygame.font.Font(pygame.font.get_default_font(), 40)
+BANG = BANF_FONT.render('BANG!', True, white, red)
+BANCRect = BANG.get_rect()
+BANCRect.center = (width - 200, 200)
+
+startone = 0
+while 1:
+    TIME = time.time() - start
+    text = SCORE_FONT.render('TIME :' + str(int(TIME)) + '  SCORE: ' + str(SCORE), True, white, red)
+    textRect = text.get_rect()
+    textRect.center = (width - 200, height - 200)
+    cometrect = cometrect.move(cometspeed)
+
+    if int(time.time()) % 3 == 0:
+        i = random.randrange(0, len(lis))
+
+        toiletspped = lis[i]
+        # print(toiletspped)
+
+        cometrect = comet.get_rect()
+
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            sys.exit()
+
+        try:
+            if event.key == pygame.K_DOWN:
+                count += 1
+                # print('Down',count)
+                speed = [0, 2]
+            if event.key == pygame.K_UP:
+                count += 1
+                # print('UP',count)
+                speed = [0, -2]
+            if event.key == pygame.K_RIGHT:
+                count += 1
+                # print('Right',count)
+                speed = [2, 0]
+            if event.key == pygame.K_LEFT:
+                count += 1
+                # print('left',count)
+                speed = [-2, 0]
+
+        except:
+            pass
+
+    girlrect = girlrect.move(speed)
+
+    toiletreact = toiletreact.move(toiletspped)
+
+    if pygame.Rect.colliderect(girlrect, toiletreact):
+        SCORE += 1
+
+    # print(ballrect,speed)
+    if girlrect.left < 0 or girlrect.right > width or (pygame.Rect.collidelist(girlrect, rectlist) != -1):
+        speed[0] = -speed[0]
+        girl = pygame.transform.flip(girl, 1, 0)
+    if girlrect.top < 0 or girlrect.bottom > height or (pygame.Rect.collidelist(girlrect, rectlist) != -1):
+        speed[1] = -speed[1]
+    if toiletreact.left < 0 or toiletreact.right > width or TIME % 3 == 0:
+        toiletspped[0] = -toiletspped[0]
+    if toiletreact.top < 0 or toiletreact.bottom > height or TIME % 3 == 0:
+        toiletspped[1] = -toiletspped[1]
+
+    gamewindow.fill(white)
+
+    for jojo in range(len(rectlist)):
+        pygame.draw.rect(gamewindow, black, rectlist[jojo])
+    if pygame.Rect.colliderect(girlrect, toiletreact):
+        startone = time.time()
+        SCORE += 1
+
+    if time.time() - startone < 1:
+        gamewindow.blit(BANG, BANCRect)
+    gamewindow.blit(comet, cometrect)
+    gamewindow.blit(toilet, toiletreact)
+    gamewindow.blit(girl, girlrect)
+    gamewindow.blit(text, textRect)
+    pygame.display.update()
